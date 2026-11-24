@@ -1,0 +1,20 @@
+data/latest.json
+{
+  "generated_at": "2026-11-19T23:59:00+00:00",
+  "total": 4,
+  "items": {
+    "M1":{"date":"2026-09","value":20061.2,"score":1,"source":"FRED:M1SL","note":"최신 확보 공개치 · 월간"},
+    "M2":{"date":"2026-09","value":23413.9,"score":2,"source":"FRED:M2SL","note":"최신 확보 공개치 · 월간"},
+    "RRP":{"date":"2026-11-17","value":0.351,"score":2,"source":"NY Fed Markets API","note":"RRP 약 $0.351B"},
+    "TGA":{"date":"2026-11-19","value":891.223,"score":0,"source":"U.S. Treasury Fiscal Data:DTS","note":"TGA 약 $891.2B"},
+    "RES":{"date":"2026-11-11","value":2960.603,"score":1,"source":"FRED:WRESBAL","note":"준비금 약 $2.961T · 주간"},
+    "EARN":{"score":1,"status":"manual","note":"기업실적 +1 · 최신 실적 추세 수동 검토"},
+    "AI":{"score":1,"status":"manual","note":"AI 투자 사이클 +1 · 최신 CAPEX 추세 수동 검토"},
+    "BTC":{"date":"2026-11-18","value":85673289,"chg24h":0,"score":0,"source":"CoinGecko API","note":"최신 확보 공개치"},
+    "Y10":{"date":"2026-11-17","value":5.10,"score":-1,"source":"FRED:DGS10","note":"10Y 5.10%"},
+    "DXY":{"date":"2026-11-13","value":122.6503,"score":-2,"source":"FRED:DTWEXBGS","note":"DXY 122.65"},
+    "KOSPI":{"score":-1,"status":"manual","note":"외국인 KOSPI 순매수 -1 · 최신 KRX 수급 수동 검토"},
+    "SENT":{"score":0,"status":"manual","note":"CNN/CMC Fear & Greed 자동 endpoint 별도 검토"}
+  },
+  "errors": {}
+}
