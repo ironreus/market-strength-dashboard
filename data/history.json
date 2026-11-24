@@ -1,1 +1,101 @@
-{"history":[{"date":"2026-11-19","total":4,"items":{"M1":{"value":20061.2,"score":1},"M2":{"value":23413.9,"score":2},"RRP":{"value":0.351,"score":2},"TGA":{"value":891.223,"score":0},"RES":{"value":2960.603,"score":1},"EARN":{"score":1},"AI":{"score":1},"BTC":{"value":85673289,"score":0},"Y10":{"value":5.1,"score":-1},"DXY":{"value":122.6503,"score":-2},"KOSPI":{"score":-1},"SENT":{"score":0}}}]}
+{
+  "history": [
+    {
+      "date": "2026-11-19",
+      "total": 4,
+      "items": {
+        "M1": {
+          "value": 20061.2,
+          "score": 1
+        },
+        "M2": {
+          "value": 23413.9,
+          "score": 2
+        },
+        "RRP": {
+          "value": 0.351,
+          "score": 2
+        },
+        "TGA": {
+          "value": 891.223,
+          "score": 0
+        },
+        "RES": {
+          "value": 2960.603,
+          "score": 1
+        },
+        "EARN": {
+          "score": 1
+        },
+        "AI": {
+          "score": 1
+        },
+        "BTC": {
+          "value": 85673289,
+          "score": 0
+        },
+        "Y10": {
+          "value": 5.1,
+          "score": -1
+        },
+        "DXY": {
+          "value": 122.6503,
+          "score": -2
+        },
+        "KOSPI": {
+          "score": -1
+        },
+        "SENT": {
+          "score": 0
+        }
+      }
+    },
+    {
+      "date": "2026-11-24",
+      "total": 3,
+      "items": {
+        "RRP": {
+          "date": "2026-11-23",
+          "value": 0.35,
+          "source": "NY Fed Markets API",
+          "score": 2
+        },
+        "BTC": {
+          "date": "2026-11-24",
+          "value": 81292066.0,
+          "chg24h": -1.5766926595849176,
+          "source": "CoinGecko API",
+          "score": 0
+        },
+        "EARN": {
+          "score": 1,
+          "status": "manual",
+          "note": "기업실적 +1 · 최신 실적 추세 수동 검토"
+        },
+        "AI": {
+          "score": 1,
+          "status": "manual",
+          "note": "AI 투자 사이클 +1 · 최신 CAPEX 추세 수동 검토"
+        },
+        "KOSPI": {
+          "score": -1,
+          "status": "manual",
+          "note": "외국인 KOSPI 순매수 -1 · 최신 KRX 수급 수동 검토"
+        },
+        "SENT": {
+          "score": 0,
+          "status": "manual",
+          "note": "CNN/CMC Fear & Greed 자동 endpoint가 변경될 수 있어 기본 0"
+        }
+      },
+      "errors": {
+        "M1": "The read operation timed out",
+        "M2": "The read operation timed out",
+        "RES": "The read operation timed out",
+        "Y10": "The read operation timed out",
+        "DXY": "The read operation timed out",
+        "TGA": "list index out of range"
+      }
+    }
+  ]
+}
