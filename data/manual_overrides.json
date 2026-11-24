@@ -1,0 +1,2 @@
+data/manual_overrides.json
+{"EARN":{"score":1,"status":"manual","note":"기업실적 +1 · 최신 실적 추세 수동 검토"},"AI":{"score":1,"status":"manual","note":"AI 투자 사이클 +1 · 최신 CAPEX 추세 수동 검토"},"KOSPI":{"score":-1,"status":"manual","note":"외국인 KOSPI 순매수 -1 · 최신 KRX 수급 수동 검토"},"SENT":{"score":0,"status":"manual","note":"CNN/CMC Fear & Greed 자동 endpoint가 변경될 수 있어 기본 0"}}
