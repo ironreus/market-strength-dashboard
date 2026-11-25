@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-24T23:42:12.881042+00:00",
-  "total": 3,
+  "generated_at": "2026-11-25T23:43:10.374597+00:00",
+  "total": 4,
   "items": {
     "RRP": {
-      "date": "2026-11-24",
-      "value": 0.301,
+      "date": "2026-11-25",
+      "value": 0.3,
       "source": "NY Fed Markets API",
       "score": 2
     },
     "BTC": {
-      "date": "2026-11-24",
-      "value": 80186126.0,
-      "chg24h": -2.492268911452232,
+      "date": "2026-11-25",
+      "value": 81005700.0,
+      "chg24h": 1.047218907074727,
       "source": "CoinGecko API",
-      "score": 0
+      "score": 1
     },
     "EARN": {
       "score": 1,
@@ -42,6 +42,6 @@
     "RES": "The read operation timed out",
     "Y10": "The read operation timed out",
     "DXY": "The read operation timed out",
-    "TGA": "list index out of range"
+    "TGA": "The read operation timed out"
   }
 }
