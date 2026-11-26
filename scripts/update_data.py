@@ -1,60 +1,68 @@
-#!/usr/bin/env python3
-import csv,io,json,os
-from pathlib import Path
-from datetime import datetime,timezone
-from urllib.request import Request,urlopen
-from urllib.parse import urlencode
-ROOT=Path(__file__).resolve().parents[1]; DATA=ROOT/'data'; DATA.mkdir(exist_ok=True)
-H={'User-Agent':'market-strength-dashboard/1.0'}
-def getj(u):
- r=urlopen(Request(u,headers=H),timeout=20); return json.loads(r.read().decode())
-def gettext(u):
- r=urlopen(Request(u,headers=H),timeout=20); return r.read().decode('utf-8','replace')
+import json,csv,io,os,datetime,urllib.request
+
+ROOT=os.path.dirname(os.path.dirname(__file__)); DATA=os.path.join(ROOT,"data"); os.makedirs(DATA,exist_ok=True)
+UA={"User-Agent":"market-strength-dashboard/2.0"}; TODAY=datetime.datetime.now(datetime.timezone.utc).astimezone().date().isoformat()
+def get(u):
+    r=urllib.request.Request(u,headers=UA)
+    with urllib.request.urlopen(r,timeout=20) as x:return x.read().decode()
 def fred(s):
- rows=list(csv.reader(io.StringIO(gettext(f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={s}')))); a=[]
- for row in rows[1:]:
-  if len(row)>1 and row[1] not in ('','.'): 
-   try:a.append((row[0],float(row[1])))
-   except:pass
- if not a: raise RuntimeError(s)
- return {'date':a[-1][0],'value':a[-1][1],'prev':a[-2][1] if len(a)>1 else None,'source':f'FRED:{s}'}
-def tga():
- u='https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/operating_cash_balance?'+urlencode({'fields':'record_date,account_type,open_today_bal','filter':'account_type:eq:Treasury General Account Closing Balance','sort':'-record_date','page[size]':'5'})
- x=getj(u)['data'][0]; raw=float(str(x['open_today_bal']).replace('$','').replace(',','')); return {'date':x['record_date'],'value':raw/1e9,'source':'U.S. Treasury Fiscal Data:DTS'}
-def rrp():
- j=getj('https://markets.newyorkfed.org/api/rp/reverserepo/all/results/last/10.json'); found=[]
- def walk(x):
-  if isinstance(x,list):
-   for y in x:walk(y)
-  elif isinstance(x,dict):
-   if ('operationDate' in x or 'operation_date' in x) and any(k in x for k in ('totalAmtAccepted','total_amt_accepted','amountAccepted')):found.append(x)
-   for y in x.values():walk(y)
- walk(j)
- if not found:raise RuntimeError('RRP format changed')
- x=found[0];raw=x.get('totalAmtAccepted',x.get('total_amt_accepted',x.get('amountAccepted')));return {'date':x.get('operationDate',x.get('operation_date')),'value':float(raw)/1e9,'source':'NY Fed Markets API'}
-def btc():
- b=getj('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=krw&include_24hr_change=true')['bitcoin'];return {'date':datetime.now(timezone.utc).date().isoformat(),'value':float(b['krw']),'chg24h':float(b.get('krw_24h_change',0)),'source':'CoinGecko API'}
-def score(k,v):
- if k in ('M1','M2','RES'):
-  if v.get('prev') is None:return None
-  p=(v['value']/v['prev']-1)*100; lim=.3 if k!='RES' else .5; return 2 if p>lim else 1 if p>0 else -2 if p<-lim else -1
- if k=='RRP':x=v['value'];return 2 if x<50 else 1 if x<200 else 0 if x<500 else -1 if x<1000 else -2
- if k=='TGA':x=v['value'];return 2 if x<700 else 1 if x<850 else 0 if x<1000 else -1 if x<1150 else -2
- if k=='Y10':x=v['value'];return 2 if x<3.8 else 1 if x<4.4 else 0 if x<4.8 else -1 if x<5.2 else -2
- if k=='DXY':x=v['value'];return 2 if x<98 else 1 if x<101 else 0 if x<104 else -1 if x<107 else -2
- if k=='BTC':x=v.get('chg24h',0);return 2 if x>3 else 1 if x>0 else 0 if x>-3 else -1 if x>-7 else -2
- return None
-def main():
- jobs={'M1':lambda:fred('M1SL'),'M2':lambda:fred('M2SL'),'RES':lambda:fred('WRESBAL'),'Y10':lambda:fred('DGS10'),'DXY':lambda:fred('DTWEXBGS'),'TGA':tga,'RRP':rrp,'BTC':btc}
- out={};errors={}
- for k,f in jobs.items():
-  try:
-   v=f();v['score']=score(k,v);out[k]=v
-  except Exception as e:errors[k]=str(e)
- manual=json.loads((DATA/'manual_overrides.json').read_text()) if (DATA/'manual_overrides.json').exists() else {}
- for k in ('EARN','AI','KOSPI','SENT'):out[k]=manual.get(k,{'score':0,'status':'manual_required'})
- total=sum(int(v.get('score',0) or 0) for v in out.values());now=datetime.now(timezone.utc).isoformat();day=now[:10]
- latest={'generated_at':now,'total':total,'items':out,'errors':errors};(DATA/'latest.json').write_text(json.dumps(latest,ensure_ascii=False,indent=2))
- hp=DATA/'history.json';h=json.loads(hp.read_text()) if hp.exists() else {'history':[]};a=[x for x in h.get('history',[]) if x.get('date')!=day];a.append({'date':day,'total':total,'items':out,'errors':errors});h['history']=sorted(a,key=lambda x:x['date'])[-730:];hp.write_text(json.dumps(h,ensure_ascii=False,indent=2))
- print(f'{day} total={total} errors={list(errors)}')
-if __name__=='__main__':main()
+    rows=list(csv.DictReader(io.StringIO(get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={s}"))))
+    rows=[r for r in rows if r.get(s) not in ("",".")]; r=rows[-1]; return float(r[s]),r["DATE"]
+def prev(k):
+    try:
+        h=json.load(open(os.path.join(DATA,"history.json"),encoding="utf8"))
+        a=[r["metrics"][k]["numeric"] for r in h["records"] if k in r["metrics"] and isinstance(r["metrics"][k].get("numeric"),(int,float))]
+        return a[-1] if a else None
+    except:return None
+def mk(name,value,score,trend,reason,obs,num=None):
+    d={"name":name,"value":value,"score":max(-2,min(2,int(score))),"trend":trend,"reason":reason,"obs_date":obs}
+    if num is not None:d["numeric"]=num
+    return d
+def sc(v,o,down=False):
+    if o is None:return 0
+    z=(v-o)/max(abs(o),1e-9)
+    if down:z=-z
+    return 2 if z>.05 else 1 if z>.01 else -2 if z<-.05 else -1 if z<-.01 else 0
+
+out={}; errors=[]
+for k,s,n,down in [("M1","M1SL","M1",False),("M2","M2SL","M2",False),("RES","WRESBAL","Reserve Balances",False),("Y10","DGS10","미국 10년물 금리",True),("DXY","DTWEXBGS","달러지수(DXY 대용)",False)]:
+    try:
+        v,o=fred(s); p=prev(k); out[k]=mk(n,f"{v:,.3f}",sc(v,p,down),"상승" if not p or v>p else "하락","직전 저장값 대비 변화",o,v)
+    except Exception as e: errors.append(k+":"+str(e))
+try:
+    d=json.loads(get("https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/operating_cash_balance?sort=-record_date&page%5Bsize%5D=1"))
+    r=d["data"][0]; v=float(r.get("close_today_bal") or r.get("accounting_period_amount")); o=r["record_date"]; p=prev("TGA"); out["TGA"]=mk("TGA",f"{v:,.0f}백만달러",sc(v,p,True),"하락" if p and v<p else "상승","TGA 감소를 유동성에 우호적으로 해석",o,v)
+except Exception as e: errors.append("TGA:"+str(e))
+try:
+    d=json.loads(get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=krw&include_24hr_change=true")); v=float(d["bitcoin"]["krw"]); c=float(d["bitcoin"]["krw_24h_change"]); out["BTC"]=mk("비트코인 사이클",f"{v:,.0f}원",2 if c>3 else 1 if c>.5 else -2 if c<-3 else -1 if c<-.5 else 0,"24시간 "+("상승" if c>0 else "하락"),"24시간 가격 변화 보조점수",TODAY,v)
+except Exception as e: errors.append("BTC:"+str(e))
+try:
+    d=json.loads(get("https://markets.newyorkfed.org/api/rp/reverserepo/propositions/search.json?startDate=2000-01-01&endDate="+TODAY)); a=d.get("refRateData",d.get("data",[])); r=a[-1]; v=float(r.get("totalAmtOutstanding",r.get("total_amount",0))); o=r.get("effectiveDate",TODAY); p=prev("RRP"); out["RRP"]=mk("RRP",f"{v:,.0f}",sc(v,p,True),"하락" if p and v<p else "상승","RRP 감소를 유동성에 우호적으로 해석",o,v)
+except Exception as e: errors.append("RRP:"+str(e))
+try:
+    d=json.loads(get("https://production.dataviz.cnn.io/index/fearandgreed/graphdata")); x=d.get("fear_and_greed",{}); v=x.get("score"); 
+    if v is None: raise ValueError("CNN score 없음")
+    sent=[float(v)]
+except Exception as e: errors.append("CNN:"+str(e)); sent=[]
+try:
+    d=json.loads(get("https://api.coinmarketcap.com/data-api/v3/fear-greed/latest")); v=d.get("data",{}).get("value")
+    if v is not None: sent.append(float(v))
+except Exception as e: errors.append("CMC:"+str(e))
+if sent:
+    v=sum(sent)/len(sent); out["SENT"]=mk("시장심리",f"{v:.1f}/100",2 if v>=75 else 1 if v>=55 else -2 if v<25 else -1 if v<45 else 0,"탐욕" if v>=55 else "공포" if v<45 else "중립","CNN·CoinMarketCap 공포탐욕지수 평균",TODAY,v)
+try:
+    man=json.load(open(os.path.join(DATA,"manual_overrides.json"),encoding="utf8"))
+    for k,n in [("EARN","기업실적"),("AI","AI 투자 사이클"),("KOSPI","외국인 코스피 순매수")]:
+        x=man.get(k,{}); out[k]=mk(n,x.get("value","수동 입력"),x.get("score",0),"수동",x.get("reason","수동 입력"),x.get("obs_date",TODAY))
+except Exception as e: errors.append("MANUAL:"+str(e))
+try: old=json.load(open(os.path.join(DATA,"latest.json"),encoding="utf8"))["record"]["metrics"]
+except: old={}
+for k,n in [("M1","M1"),("M2","M2"),("RRP","RRP"),("TGA","TGA"),("RES","Reserve Balances"),("EARN","기업실적"),("AI","AI 투자 사이클"),("BTC","비트코인 사이클"),("Y10","미국 10년물 금리"),("DXY","달러지수(DXY 대용)"),("KOSPI","외국인 코스피 순매수"),("SENT","시장심리")]:
+    if k not in out: out[k]=old.get(k,mk(n,"수집 실패",0,"-","데이터 수집 실패","-"))
+total=sum(x.get("score",0) for x in out.values()); rec={"date":TODAY,"total":total,"metrics":out,"errors":errors}
+json.dump({"generated_at":datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec="seconds"),"record":rec},open(os.path.join(DATA,"latest.json"),"w",encoding="utf8"),ensure_ascii=False,indent=2)
+try:h=json.load(open(os.path.join(DATA,"history.json"),encoding="utf8"))
+except:h={"records":[]}
+h["records"]=[r for r in h["records"] if r["date"]!=TODAY]+[rec]; h["records"]=h["records"][-370:]
+json.dump(h,open(os.path.join(DATA,"history.json"),"w",encoding="utf8"),ensure_ascii=False,indent=2)
+print("score",total,"errors",len(errors))
