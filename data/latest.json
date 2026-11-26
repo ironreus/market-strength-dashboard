@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T23:43:10.374597+00:00",
+  "generated_at": "2026-11-26T23:46:53.946594+00:00",
   "total": 4,
   "items": {
     "RRP": {
@@ -9,9 +9,9 @@
       "score": 2
     },
     "BTC": {
-      "date": "2026-11-25",
-      "value": 81005700.0,
-      "chg24h": 1.047218907074727,
+      "date": "2026-11-26",
+      "value": 81263715.0,
+      "chg24h": 0.32777069087201244,
       "source": "CoinGecko API",
       "score": 1
     },
@@ -42,6 +42,6 @@
     "RES": "The read operation timed out",
     "Y10": "The read operation timed out",
     "DXY": "The read operation timed out",
-    "TGA": "The read operation timed out"
+    "TGA": "list index out of range"
   }
 }
