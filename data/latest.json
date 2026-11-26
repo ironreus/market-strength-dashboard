@@ -1,47 +1,8 @@
 {
-  "generated_at": "2026-11-26T23:46:53.946594+00:00",
-  "total": 4,
-  "items": {
-    "RRP": {
-      "date": "2026-11-25",
-      "value": 0.3,
-      "source": "NY Fed Markets API",
-      "score": 2
-    },
-    "BTC": {
-      "date": "2026-11-26",
-      "value": 81263715.0,
-      "chg24h": 0.32777069087201244,
-      "source": "CoinGecko API",
-      "score": 1
-    },
-    "EARN": {
-      "score": 1,
-      "status": "manual",
-      "note": "기업실적 +1 · 최신 실적 추세 수동 검토"
-    },
-    "AI": {
-      "score": 1,
-      "status": "manual",
-      "note": "AI 투자 사이클 +1 · 최신 CAPEX 추세 수동 검토"
-    },
-    "KOSPI": {
-      "score": -1,
-      "status": "manual",
-      "note": "외국인 KOSPI 순매수 -1 · 최신 KRX 수급 수동 검토"
-    },
-    "SENT": {
-      "score": 0,
-      "status": "manual",
-      "note": "CNN/CMC Fear & Greed 자동 endpoint가 변경될 수 있어 기본 0"
-    }
-  },
-  "errors": {
-    "M1": "The read operation timed out",
-    "M2": "The read operation timed out",
-    "RES": "The read operation timed out",
-    "Y10": "The read operation timed out",
-    "DXY": "The read operation timed out",
-    "TGA": "list index out of range"
+  "generated_at": "2026-11-26T19:00:00+09:00",
+  "record": {
+    "date": "2026-11-26",
+    "total": 0,
+    "metrics": {}
   }
 }
