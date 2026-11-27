@@ -1,17 +1,26 @@
 {
-  "generated_at": "2026-11-27T00:02:06+00:00",
+  "generated_at": "2026-11-27T00:27:33+00:00",
   "record": {
     "date": "2026-11-27",
-    "total": 0,
+    "total": -2,
     "metrics": {
       "BTC": {
         "name": "비트코인 사이클",
-        "value": "81,411,926원",
+        "value": "81,392,174원",
         "score": 0,
-        "trend": "24시간 상승",
+        "trend": "24시간 하락",
         "reason": "24시간 가격 변화 보조점수",
         "obs_date": "2026-11-27",
-        "numeric": 81411926.0
+        "numeric": 81392174.0
+      },
+      "SENT": {
+        "name": "시장심리",
+        "value": "12.0/100",
+        "score": -2,
+        "trend": "공포",
+        "reason": "CNN·Alternative.me 공포탐욕지수 평균(가용 데이터 기준)",
+        "obs_date": "2026-11-27",
+        "numeric": 12.0
       },
       "EARN": {
         "name": "기업실적",
@@ -92,26 +101,17 @@
         "trend": "-",
         "reason": "데이터 수집 실패",
         "obs_date": "-"
-      },
-      "SENT": {
-        "name": "시장심리",
-        "value": "수집 실패",
-        "score": 0,
-        "trend": "-",
-        "reason": "데이터 수집 실패",
-        "obs_date": "-"
       }
     },
     "errors": [
-      "M1:The read operation timed out",
-      "M2:The read operation timed out",
-      "RES:The read operation timed out",
-      "Y10:The read operation timed out",
-      "DXY:The read operation timed out",
-      "TGA:could not convert string to float: 'null'",
-      "RRP:list index out of range",
-      "CNN:HTTP Error 418: Unknown Error",
-      "CMC:HTTP Error 404: Not Found"
+      "M1:'DATE'",
+      "M2:'DATE'",
+      "RES:'DATE'",
+      "Y10:'DATE'",
+      "DXY:'DATE'",
+      "TGA:HTTP Error 504: Gateway Time-out",
+      "RRP:RRP rows not found",
+      "CNN:HTTP Error 418: Unknown Error"
     ]
   }
 }
