@@ -1,17 +1,26 @@
 {
-  "generated_at": "2026-11-27T00:27:33+00:00",
+  "generated_at": "2026-11-27T23:40:38+00:00",
   "record": {
     "date": "2026-11-27",
-    "total": -2,
+    "total": -3,
     "metrics": {
+      "TGA": {
+        "name": "TGA",
+        "value": "923,563백만달러",
+        "score": 0,
+        "trend": "상승",
+        "reason": "TGA 감소를 유동성에 우호적으로 해석",
+        "obs_date": "2026-11-25",
+        "numeric": 923563.0
+      },
       "BTC": {
         "name": "비트코인 사이클",
-        "value": "81,392,174원",
-        "score": 0,
+        "value": "79,753,231원",
+        "score": -1,
         "trend": "24시간 하락",
         "reason": "24시간 가격 변화 보조점수",
         "obs_date": "2026-11-27",
-        "numeric": 81392174.0
+        "numeric": 79753231.0
       },
       "SENT": {
         "name": "시장심리",
@@ -70,14 +79,6 @@
         "reason": "데이터 수집 실패",
         "obs_date": "-"
       },
-      "TGA": {
-        "name": "TGA",
-        "value": "수집 실패",
-        "score": 0,
-        "trend": "-",
-        "reason": "데이터 수집 실패",
-        "obs_date": "-"
-      },
       "RES": {
         "name": "Reserve Balances",
         "value": "수집 실패",
@@ -109,7 +110,6 @@
       "RES:'DATE'",
       "Y10:'DATE'",
       "DXY:'DATE'",
-      "TGA:HTTP Error 504: Gateway Time-out",
       "RRP:RRP rows not found",
       "CNN:HTTP Error 418: Unknown Error"
     ]
