@@ -1,3 +1,118 @@
 {
-  "records": []
+  "records": [
+    {
+      "date": "2026-11-27",
+      "total": 0,
+      "metrics": {
+        "BTC": {
+          "name": "비트코인 사이클",
+          "value": "81,411,926원",
+          "score": 0,
+          "trend": "24시간 상승",
+          "reason": "24시간 가격 변화 보조점수",
+          "obs_date": "2026-11-27",
+          "numeric": 81411926.0
+        },
+        "EARN": {
+          "name": "기업실적",
+          "value": "수동 입력",
+          "score": 0,
+          "trend": "수동",
+          "reason": "기업실적 평가를 입력하세요.",
+          "obs_date": "-"
+        },
+        "AI": {
+          "name": "AI 투자 사이클",
+          "value": "수동 입력",
+          "score": 0,
+          "trend": "수동",
+          "reason": "AI 투자 사이클 평가를 입력하세요.",
+          "obs_date": "-"
+        },
+        "KOSPI": {
+          "name": "외국인 코스피 순매수",
+          "value": "수동 입력",
+          "score": 0,
+          "trend": "수동",
+          "reason": "외국인 코스피 순매수 평가를 입력하세요.",
+          "obs_date": "-"
+        },
+        "M1": {
+          "name": "M1",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        },
+        "M2": {
+          "name": "M2",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        },
+        "RRP": {
+          "name": "RRP",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        },
+        "TGA": {
+          "name": "TGA",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        },
+        "RES": {
+          "name": "Reserve Balances",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        },
+        "Y10": {
+          "name": "미국 10년물 금리",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        },
+        "DXY": {
+          "name": "달러지수(DXY 대용)",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        },
+        "SENT": {
+          "name": "시장심리",
+          "value": "수집 실패",
+          "score": 0,
+          "trend": "-",
+          "reason": "데이터 수집 실패",
+          "obs_date": "-"
+        }
+      },
+      "errors": [
+        "M1:The read operation timed out",
+        "M2:The read operation timed out",
+        "RES:The read operation timed out",
+        "Y10:The read operation timed out",
+        "DXY:The read operation timed out",
+        "TGA:could not convert string to float: 'null'",
+        "RRP:list index out of range",
+        "CNN:HTTP Error 418: Unknown Error",
+        "CMC:HTTP Error 404: Not Found"
+      ]
+    }
+  ]
 }
