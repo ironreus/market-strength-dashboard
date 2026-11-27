@@ -1,29 +1,254 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>시장 체력 점수표</title>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시장 체력 일간·주간·월간 점수표</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#f5f7fb;color:#172033}.wrap{max-width:1400px;margin:auto;padding:28px 20px 60px}h1{margin:0 0 7px;font-size:27px}.sub{color:#64748b;font-size:14px}.head{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.controls{display:flex;gap:7px;align-items:center;flex-wrap:wrap}button,input{border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:9px 12px}button.active{background:#172033;color:#fff}.status,.card,.section{background:#fff;border:1px solid #e2e8f0;border-radius:14px}.status{margin:18px 0;padding:12px;font-size:13px;color:#475569}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{padding:16px}.label{font-size:12px;color:#64748b}.kpi{font-size:30px;font-weight:800;margin-top:5px}.small{font-size:12px;color:#64748b}.pos{color:#087443}.neg{color:#b42318}.neu{color:#475569}.grid{display:grid;grid-template-columns:1.35fr .65fr;gap:14px;margin-top:14px}.section{padding:17px;margin-bottom:14px}.section h2{font-size:16px;margin:0 0 13px}.chart{height:250px;display:flex;align-items:flex-end;gap:3px;border-bottom:1px solid #cbd5e1;overflow:hidden}.bar{flex:1;min-width:7px;border-radius:4px 4px 0 0;position:relative}.bar span{position:absolute;top:-17px;width:100%;text-align:center;font-size:9px;color:#64748b}.bar.pos{background:#16a34a}.bar.neg{background:#dc2626}.bar.zero{background:#94a3b8}.axis{display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:5px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;border-bottom:1px solid #edf2f7;text-align:left;vertical-align:top}th{font-size:11px;color:#64748b}.why{color:#475569;line-height:1.4}.portfolio{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.asset{border:1px solid #e2e8f0;border-radius:10px;padding:11px}.asset b{display:block;font-size:17px}.asset span{font-size:11px;color:#64748b}.note{font-size:11px;color:#64748b;line-height:1.5}li{margin:6px 0;color:#475569;line-height:1.4}@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.portfolio{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.kpis{grid-template-columns:1fr}.portfolio{grid-template-columns:1fr}}
-</style></head><body><div class="wrap">
-<div class="head"><div><h1>시장 체력 일간/주간/월간 점수표</h1><div class="sub">12개 지표 · 총 -24~+24점 · 날짜를 선택해 당시 시장 상태를 재구성</div></div>
-<div class="controls"><button id="day" class="active">일간</button><button id="week">주간</button><button id="month">월간</button><input id="date" type="date"><button id="latest">최신</button></div></div>
-<div id="status" class="status">데이터를 읽는 중…</div>
-<div class="kpis"><div class="card"><div class="label">종합점수</div><div id="total" class="kpi">-</div><div id="regime" class="small">-</div></div><div class="card"><div class="label">선택 기준일</div><div id="sel" class="kpi" style="font-size:22px">-</div><div class="small">각 지표별 관측일은 표에서 확인</div></div><div class="card"><div class="label">최근 30일 평균 변화</div><div id="trend" class="kpi" style="font-size:25px">-</div><div id="trendText" class="small">-</div></div><div class="card"><div class="label">운용 판단</div><div id="judg" class="kpi" style="font-size:19px">-</div><div class="small">보조지표로 활용</div></div></div>
-<div class="grid"><main><div class="section"><h2>종합점수 추이</h2><div id="chart" class="chart"></div><div id="axis" class="axis"></div></div>
-<div class="section"><h2>12개 지표</h2><div style="overflow:auto"><table><thead><tr><th>지표</th><th>현재값</th><th>점수</th><th>추세</th><th>근거</th><th>관측일</th></tr></thead><tbody id="metrics"></tbody></table></div></div></main>
-<aside><div class="section"><h2>기본 포트폴리오</h2><div class="portfolio"><div class="asset"><b>QQQ 30%</b><span>성장/AI</span></div><div class="asset"><b>VOO 28%</b><span>미국 대형주</span></div><div class="asset"><b>SCHD 10%</b><span>배당성장</span></div><div class="asset"><b>BTC 12%</b><span>고위험 성장</span></div><div class="asset"><b>현금 20%</b><span>기회자금</span></div></div><p class="note">시장 점수는 신규자금 투입 속도와 위험관리 참고용이며 목표비중을 자동 변경하지 않는다.</p></div>
-<div class="section"><h2>3~6개월 기본 시나리오</h2><div id="outlook"></div></div><div class="section"><h2>리스크 / 촉매</h2><div id="risks"></div></div>
-<div class="section"><h2>점수 체계</h2><div class="note">+9~+24 강한 확장 · +5~+8 우호 · +1~+4 개선 가능 · 0 중립 · -1~-4 주의 · -5~-8 긴축 우세 · -9~-24 위험<br>각 항목 -2~+2. CNN Fear & Greed와 CoinMarketCap Fear & Greed는 하나의 시장심리 항목으로 결합.</div></div></aside></div></div>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#f5f7fb;color:#172033}
+.wrap{max-width:1400px;margin:auto;padding:28px 20px 60px}
+h1{margin:0 0 7px;font-size:27px}.sub{color:#64748b;font-size:14px}
+.head{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.controls{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+button,input{border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:9px 12px;font:inherit}
+button{cursor:pointer}button.active{background:#172033;color:#fff;border-color:#172033}
+button.primary{background:#2563eb;color:#fff;border-color:#2563eb;font-weight:700}
+.status,.card,.section{background:#fff;border:1px solid #e2e8f0;border-radius:14px}
+.status{margin:18px 0;padding:12px;font-size:13px;color:#475569;line-height:1.55}
+.status.ok{border-color:#bbf7d0}.status.warn{border-color:#fde68a}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{padding:16px}.label{font-size:12px;color:#64748b}
+.kpi{font-size:30px;font-weight:800;margin-top:5px}.small{font-size:12px;color:#64748b}
+.pos{color:#087443}.neg{color:#b42318}.neu{color:#475569}
+.grid{display:grid;grid-template-columns:1.35fr .65fr;gap:14px;margin-top:14px}
+.section{padding:17px;margin-bottom:14px}.section h2{font-size:16px;margin:0 0 13px}
+.chart{height:250px;display:flex;align-items:flex-end;gap:3px;border-bottom:1px solid #cbd5e1;overflow:hidden}
+.bar{flex:1;min-width:7px;border-radius:4px 4px 0 0;position:relative}
+.bar span{position:absolute;top:-17px;width:100%;text-align:center;font-size:9px;color:#64748b}
+.bar.pos{background:#16a34a}.bar.neg{background:#dc2626}.bar.zero{background:#94a3b8}
+.axis{display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:5px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 7px;border-bottom:1px solid #edf2f7;text-align:left;vertical-align:top}
+th{font-size:11px;color:#64748b}.why{color:#475569;line-height:1.4}
+.portfolio{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.asset{border:1px solid #e2e8f0;border-radius:10px;padding:11px}
+.asset b{display:block;font-size:17px}.asset span{font-size:11px;color:#64748b}
+.note{font-size:11px;color:#64748b;line-height:1.5}
+.period{margin-top:9px;font-size:12px;color:#475569}
+.empty{padding:18px;color:#64748b;text-align:center}
+.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:11px;font-weight:700}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.portfolio{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}.portfolio{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div>
+      <h1>시장 체력 일간·주간·월간 점수표</h1>
+      <div class="sub">12개 지표 · 총 -24~+24점 · 기준일을 선택해 당시 시장 상태를 재구성</div>
+    </div>
+    <div class="controls">
+      <button id="day" class="active">일간</button>
+      <button id="week">주간</button>
+      <button id="month">월간</button>
+      <input id="date" type="date">
+      <button id="query" class="primary">조회</button>
+      <button id="latest">오늘</button>
+      <button id="reload">새로고침</button>
+    </div>
+  </div>
+
+  <div id="status" class="status">데이터를 읽는 중…</div>
+
+  <div class="kpis">
+    <div class="card"><div class="label">종합점수</div><div id="total" class="kpi">-</div><div id="regime" class="small">-</div></div>
+    <div class="card"><div class="label">조회 기준</div><div id="sel" class="kpi" style="font-size:21px">-</div><div id="periodText" class="period">-</div></div>
+    <div class="card"><div class="label">최근 30일 평균 변화</div><div id="trend" class="kpi" style="font-size:25px">-</div><div id="trendText" class="small">-</div></div>
+    <div class="card"><div class="label">운용 판단</div><div id="judg" class="kpi" style="font-size:19px">-</div><div class="small">보조지표로 활용</div></div>
+  </div>
+
+  <div class="grid">
+    <main>
+      <div class="section">
+        <h2>종합점수 추이</h2>
+        <div id="chart" class="chart"></div>
+        <div id="axis" class="axis"></div>
+      </div>
+
+      <div class="section">
+        <h2>12개 지표</h2>
+        <div style="overflow:auto">
+          <table>
+            <thead><tr><th>지표</th><th>현재값</th><th>점수</th><th>추세</th><th>근거</th><th>관측일</th></tr></thead>
+            <tbody id="metrics"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <aside>
+      <div class="section">
+        <h2>기본 포트폴리오</h2>
+        <div class="portfolio">
+          <div class="asset"><b>QQQ 30%</b><span>성장/AI</span></div>
+          <div class="asset"><b>VOO 28%</b><span>미국 대형주</span></div>
+          <div class="asset"><b>SCHD 10%</b><span>배당성장</span></div>
+          <div class="asset"><b>BTC 12%</b><span>고위험 성장</span></div>
+          <div class="asset"><b>현금 20%</b><span>기회자금</span></div>
+        </div>
+        <p class="note">시장 점수는 신규자금 투입 속도와 위험관리 참고용이며 목표비중을 자동 변경하지 않는다.</p>
+      </div>
+
+      <div class="section"><h2>3~6개월 기본 시나리오</h2><div id="outlook"></div></div>
+      <div class="section"><h2>리스크 / 촉매</h2><div id="risks"></div></div>
+      <div class="section">
+        <h2>점수 체계</h2>
+        <div class="note">
+          +9~+24 강한 확장 · +5~+8 우호 · +1~+4 개선 가능 · 0 중립 ·
+          -1~-4 주의 · -5~-8 긴축 우세 · -9~-24 위험<br>
+          각 항목 -2~+2. CNN Fear &amp; Greed와 CoinMarketCap Fear &amp; Greed는 하나의 시장심리 항목으로 결합.
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
 <script>
-let latest=null,history=null,mode="day",esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-const $=x=>document.getElementById(x), recs=()=>history?.records||[];
-function rg(s){return s>=9?["강한 확장","pos"]:s>=5?["우호","pos"]:s>=1?["개선 가능","pos"]:s===0?["중립","neu"]:s>=-4?["주의","neg"]:s>=-8?["긴축 우세","neg"]:["위험","neg"]}
-function rdate(d){let a=recs().filter(x=>x.date<=d);return a.length?a[a.length-1]:latest?.record}
-function agg(a){if(!a.length)return null;let o={date:a[a.length-1].date,metrics:{}};Object.keys(a[0].metrics||{}).forEach(k=>{let v=a.map(r=>r.metrics[k]).filter(x=>x&&typeof x.score==="number");if(v.length)o.metrics[k]={...v[v.length-1],score:Math.round(v.reduce((s,x)=>s+x.score,0)/v.length),reason:"기간 평균 점수"}});o.total=Object.values(o.metrics).reduce((s,x)=>s+x.score,0);return o}
-function selected(){let d=$("date").value||latest?.record.date;if(mode==="day")return rdate(d);let end=new Date(d+"T00:00:00"),start=new Date(end);start.setDate(start.getDate()-(mode==="week"?6:end.getDate()-1));let a=recs().filter(r=>r.date>=start.toISOString().slice(0,10)&&r.date<=d);return agg(a)||rdate(d)}
-function render(r){if(!r)return;$("total").textContent=(r.total>0?"+":"")+r.total;$("total").className="kpi "+(r.total>0?"pos":r.total<0?"neg":"neu");let g=rg(r.total);$("regime").innerHTML=`<span class="${g[1]}">${g[0]}</span>`;$("sel").textContent=r.date;$("judg").textContent=r.total>=5?"위험선호 우위":r.total>=1?"선별적 위험선호":r.total===0?"중립":"방어적 운용 우위";
-let a=recs().filter(x=>x.date<=r.date).slice(-60),p=a.slice(-30),q=a.length>30?a.slice(-60,-30):[];let av=x=>x.length?x.reduce((s,r)=>s+r.total,0)/x.length:null;let d=q.length?av(p)-av(q):null;$("trend").textContent=d==null?"-":(d>0?"+":"")+d.toFixed(1);$("trendText").textContent=d==null?"비교 데이터 부족":d>0?"점수 개선":"점수 약화";
-$("metrics").innerHTML=Object.entries(r.metrics||{}).map(([k,m])=>`<tr><td><b>${esc(m.name||k)}</b></td><td>${esc(m.value)}</td><td class="score ${m.score>0?"pos":m.score<0?"neg":"neu"}">${m.score>0?"+":""}${m.score}</td><td>${esc(m.trend||"-")}</td><td class="why">${esc(m.reason||"-")}</td><td>${esc(m.obs_date||"-")}</td></tr>`).join("");draw(a);outlook(r);risks(r)}
-function draw(a){$("chart").innerHTML="";if(!a.length)return;a.forEach(r=>{let b=document.createElement("div"),h=Math.max(3,Math.abs(r.total)/24*100);b.className="bar "+(r.total>0?"pos":r.total<0?"neg":"zero");b.style.height=h+"%";b.style.marginTop=r.total>=0?(100-h)+"%":"100%";b.title=r.date+" : "+r.total;b.innerHTML=`<span>${r.total}</span>`;$("chart").appendChild(b)});$("axis").innerHTML=`<span>${a[0].date}</span><span>${a[a.length-1].date}</span>`}
-function outlook(r){let t=r.total>=5?"유동성·심리·위험자산 환경이 우호적일 가능성을 기본 시나리오로 본다. 신규자금은 추격매수보다 분할 투입한다.":r.total>=1?"개선 가능 구간이나 확신은 아니다. 장기 주식은 유지하고 현금의 기회를 남긴다.":r.total>=-4?"중립~주의 구간이다. 가격·추세 확인을 우선하고 BTC는 더 보수적으로 분할 접근한다.":"긴축·위험회피 가능성을 우선 반영한다. 신규 투입 속도를 늦추고 현금 완충을 활용한다.";$("outlook").innerHTML=`<ul><li>${t}</li><li>QQQ·VOO는 장기 목표비중 중심으로, 점수는 추가매수 속도 조절에 사용한다.</li><li>BTC는 주식보다 변동성이 크므로 점수와 가격 추세를 함께 본다.</li></ul>`}
-function risks(r){let w=Object.values(r.metrics||{}).filter(x=>x.score<0).sort((a,b)=>a.score-b.score).slice(0,3),s=Object.values(r.metrics||{}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,3);$("risks").innerHTML=`<b class="neg">리스크</b><ul>${w.length?w.map(x=>`<li>${esc(x.name)}: ${esc(x.reason)}</li>`).join(""):"<li>현재 음수 항목 없음</li>"}</ul><b class="pos">촉매</b><ul>${s.length?s.map(x=>`<li>${esc(x.name)}: ${esc(x.reason)}</li>`).join(""):"<li>현재 양수 항목 없음</li>"}</ul>`}
-async function load(){try{let q="?v="+Date.now(),a=await fetch("data/latest.json"+q),b=await fetch("data/history.json"+q);if(!a.ok||!b.ok)throw Error("data JSON을 읽지 못했습니다.");latest=await a.json();history=await b.json();$("status").innerHTML=`정상 로딩 · 생성 ${esc(latest.generated_at)} · 기록 ${recs().length}일`;$("date").value=latest.record.date;render(selected())}catch(e){$("status").innerHTML=`<b class="neg">데이터 로딩 실패</b> — ${esc(e.message)}<br>data/latest.json과 data/history.json이 Pages에 포함되어 있는지 확인하세요.`}}
-["day","week","month"].forEach(x=>$(x).onclick=()=>{mode=x;["day","week","month"].forEach(y=>$(y).classList.toggle("active",x===y));render(selected())});$("date").onchange=()=>render(selected());$("latest").onclick=()=>{$("date").value=latest?.record.date;render(selected())};load();
-</script></body></html>
+let latest=null, history=null, mode="day";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const recs=()=>history?.records||[];
+
+function regime(s){
+  return s>=9?["강한 확장","pos"]:
+         s>=5?["우호","pos"]:
+         s>=1?["개선 가능","pos"]:
+         s===0?["중립","neu"]:
+         s>=-4?["주의","neg"]:
+         s>=-8?["긴축 우세","neg"]:["위험","neg"];
+}
+function findRecord(d){
+  const a=recs().filter(x=>x.date<=d);
+  return a.length?a[a.length-1]:latest?.record||null;
+}
+function averagePeriod(a){
+  if(!a.length)return null;
+  const keys=[...new Set(a.flatMap(r=>Object.keys(r.metrics||{})))];
+  const o={date:a[a.length-1].date,metrics:{}};
+  keys.forEach(k=>{
+    const vals=a.map(r=>r.metrics?.[k]).filter(x=>x&&typeof x.score==="number");
+    if(!vals.length)return;
+    const last=vals[vals.length-1];
+    o.metrics[k]={...last,score:Math.round(vals.reduce((s,x)=>s+x.score,0)/vals.length),reason:"선택 기간 평균 점수"};
+  });
+  o.total=Object.values(o.metrics).reduce((s,x)=>s+x.score,0);
+  return o;
+}
+function periodRange(d){
+  const end=new Date(d+"T00:00:00");
+  let start=new Date(end);
+  if(mode==="week")start.setDate(start.getDate()-6);
+  if(mode==="month")start=new Date(end.getFullYear(),end.getMonth(),1);
+  return [start.toISOString().slice(0,10),d];
+}
+function selected(){
+  const d=$("date").value||latest?.record.date;
+  if(!d)return null;
+  if(mode==="day")return findRecord(d);
+  const [s,e]=periodRange(d);
+  const a=recs().filter(r=>r.date>=s&&r.date<=e);
+  return averagePeriod(a)||findRecord(d);
+}
+function periodLabel(d){
+  if(mode==="day")return "일간 · 해당일 이용 가능한 최신 관측값";
+  const [s,e]=periodRange(d);
+  return mode==="week"?`주간 · ${s} ~ ${e}`:`월간 · ${s} ~ ${e}`;
+}
+function render(r){
+  if(!r){
+    $("total").textContent="-"; $("sel").textContent="-"; $("metrics").innerHTML='<tr><td colspan="6" class="empty">조회할 데이터가 없습니다.</td></tr>'; return;
+  }
+  $("total").textContent=(r.total>0?"+":"")+r.total;
+  $("total").className="kpi "+(r.total>0?"pos":r.total<0?"neg":"neu");
+  const g=regime(r.total); $("regime").innerHTML=`<span class="${g[1]}">${g[0]}</span>`;
+  $("sel").textContent=r.date; $("periodText").textContent=periodLabel(r.date);
+  $("judg").textContent=r.total>=5?"위험선호 우위":r.total>=1?"선별적 위험선호":r.total===0?"중립":"방어적 운용 우위";
+
+  const a=recs().filter(x=>x.date<=r.date).slice(-60);
+  const p=a.slice(-30), q=a.length>30?a.slice(-60,-30):[];
+  const av=x=>x.length?x.reduce((s,z)=>s+z.total,0)/x.length:null;
+  const delta=q.length?av(p)-av(q):null;
+  $("trend").textContent=delta==null?"-":(delta>0?"+":"")+delta.toFixed(1);
+  $("trendText").textContent=delta==null?"비교 데이터 부족":delta>0?"점수 개선":"점수 약화";
+
+  $("metrics").innerHTML=Object.entries(r.metrics||{}).map(([k,m])=>
+    `<tr><td><b>${esc(m.name||k)}</b></td>
+     <td>${esc(m.value)}</td>
+     <td class="${m.score>0?"pos":m.score<0?"neg":"neu"}">${m.score>0?"+":""}${m.score}</td>
+     <td>${esc(m.trend||"-")}</td>
+     <td class="why">${esc(m.reason||"-")}</td>
+     <td>${esc(m.obs_date||"-")}</td></tr>`
+  ).join("") || '<tr><td colspan="6" class="empty">지표 데이터가 없습니다.</td></tr>';
+
+  draw(a); outlook(r); risks(r);
+}
+function draw(a){
+  $("chart").innerHTML="";
+  if(!a.length){$("axis").innerHTML="";return;}
+  a.forEach(r=>{
+    const b=document.createElement("div"), h=Math.max(3,Math.abs(r.total)/24*100);
+    b.className="bar "+(r.total>0?"pos":r.total<0?"neg":"zero");
+    b.style.height=h+"%"; b.style.marginTop=r.total>=0?(100-h)+"%":"100%";
+    b.title=r.date+" : "+r.total;
+    b.innerHTML=`<span>${r.total}</span>`;
+    $("chart").appendChild(b);
+  });
+  $("axis").innerHTML=`<span>${a[0].date}</span><span>${a[a.length-1].date}</span>`;
+}
+function outlook(r){
+  const t=r.total>=5?"유동성·심리·위험자산 환경이 우호적일 가능성을 기본 시나리오로 본다. 신규자금은 추격매수보다 분할 투입한다.":
+          r.total>=1?"개선 가능 구간이나 확신은 아니다. 장기 주식은 유지하고 현금의 기회를 남긴다.":
+          r.total>=-4?"중립~주의 구간이다. 가격·추세 확인을 우선하고 BTC는 더 보수적으로 분할 접근한다.":
+          "긴축·위험회피 가능성을 우선 반영한다. 신규 투입 속도를 늦추고 현금 완충을 활용한다.";
+  $("outlook").innerHTML=`<ul><li>${t}</li><li>QQQ·VOO는 장기 목표비중 중심으로, 점수는 추가매수 속도 조절에 사용한다.</li><li>BTC는 주식보다 변동성이 크므로 점수와 가격 추세를 함께 본다.</li></ul>`;
+}
+function risks(r){
+  const w=Object.values(r.metrics||{}).filter(x=>x.score<0).sort((a,b)=>a.score-b.score).slice(0,3);
+  const s=Object.values(r.metrics||{}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,3);
+  $("risks").innerHTML=`<b class="neg">리스크</b><ul>${w.length?w.map(x=>`<li>${esc(x.name)}: ${esc(x.reason)}</li>`).join(""):"<li>현재 음수 항목 없음</li>"}</ul>
+  <b class="pos">촉매</b><ul>${s.length?s.map(x=>`<li>${esc(x.name)}: ${esc(x.reason)}</li>`).join(""):"<li>현재 양수 항목 없음</li>"}</ul>`;
+}
+async function fetchData(){
+  $("status").className="status"; $("status").textContent="데이터를 다시 조회하는 중…";
+  try{
+    const q="?v="+Date.now();
+    const [a,b]=await Promise.all([fetch("data/latest.json"+q,{cache:"no-store"}),fetch("data/history.json"+q,{cache:"no-store"})]);
+    if(!a.ok||!b.ok)throw new Error(`JSON HTTP 오류 (${a.status}/${b.status})`);
+    latest=await a.json(); history=await b.json();
+    $("status").className="status ok";
+    $("status").innerHTML=`정상 로딩 · 생성 ${esc(latest.generated_at)} · 누적 기록 ${recs().length}일 · <span class="badge">${mode==="day"?"일간":mode==="week"?"주간":"월간"}</span>`;
+    if(!$("date").value)$("date").value=latest.record.date;
+    render(selected());
+  }catch(e){
+    $("status").className="status warn";
+    $("status").innerHTML=`<b class="neg">데이터 로딩 실패</b> — ${esc(e.message)}<br>GitHub Actions에서 <b>Update market data</b>가 성공했는지, 그리고 data/latest.json·history.json이 갱신됐는지 확인하세요.`;
+  }
+}
+function setMode(m){
+  mode=m;
+  ["day","week","month"].forEach(x=>$(x).classList.toggle("active",x===m));
+  render(selected());
+}
+$("day").onclick=()=>setMode("day");
+$("week").onclick=()=>setMode("week");
+$("month").onclick=()=>setMode("month");
+$("query").onclick=()=>{ if(!history) fetchData(); else render(selected()); };
+$("latest").onclick=()=>{ $("date").value=latest?.record.date||new Date().toISOString().slice(0,10); render(selected()); };
+$("reload").onclick=()=>fetchData();
+$("date").addEventListener("change",()=>{ $("status").innerHTML="날짜가 선택되었습니다. <b>조회</b> 버튼을 누르면 해당 기준으로 표시합니다."; });
+fetchData();
+</script>
+</body>
+</html>
